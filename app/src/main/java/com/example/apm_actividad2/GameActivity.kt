@@ -14,6 +14,8 @@ class GameActivity : AppCompatActivity() {
     private lateinit var scoreTextView: TextView
     private lateinit var highScoreTextView: TextView
 
+    private lateinit var volverButton: Button
+
     private lateinit var game: Game
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -25,6 +27,10 @@ class GameActivity : AppCompatActivity() {
         scoreTextView = findViewById(R.id.scoreTextView)
         highScoreTextView = findViewById(R.id.highScoreTextView)
 
+        volverButton = findViewById(R.id.backGame)
+        volverButton.setOnClickListener {
+                finish()
+        }
         sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
 
         val highScore = sharedPreferences.getInt("highScore", 0)
