@@ -15,19 +15,28 @@ class CiudadService(context: Context) {
 
     private val databaseHelper = CiudadDb(context)
 
-    fun addCity(city: City) {
-        val db = databaseHelper.writableDatabase
+    fun addCity(city: City) : Boolean {
+            val db = databaseHelper.writableDatabase
 
-        val values = ContentValues().apply {
-            put(COLUMN_COUNTRY, city.country)
-            put(COLUMN_CITY, city.city)
-            put(COLUMN_POPULATION, city.population)
+            val query = "SELECT * FROM $TABLE_NAME WHERE $COLUMN_COUNTRY = ? AND $COLUMN_CITY = ?"
+            val cursor = db.rawQuery(query, arrayOf(city.country, city.city))
+
+            if (cursor.moveToFirst()) {
+                cursor.close()
+                db.close()
+                return false
+            }
+
+            val values = ContentValues().apply {
+                put(COLUMN_COUNTRY, city.country)
+                put(COLUMN_CITY, city.city)
+                put(COLUMN_POPULATION, city.population)
+            }
+            val result = db.insert(TABLE_NAME, null, values)
+            db.close()
+
+            return result >= 0
         }
-
-        db.insert(TABLE_NAME, null, values)
-
-        db.close()
-    }
 
     fun getCityByName(cityName: String): City? {
         val db = databaseHelper.readableDatabase
@@ -60,28 +69,28 @@ class CiudadService(context: Context) {
         return city
     }
 
-    fun deleteCityByName(cityName: String) {
+    fun deleteCityByName(cityName: String) : Boolean {
         val db = databaseHelper.writableDatabase
 
-        db.delete(
+        val res = db.delete(
             TABLE_NAME,
             "$COLUMN_CITY = ?",
             arrayOf(cityName)
         )
-
         db.close()
+        return res > 0
     }
 
-    fun deleteCitiesByCountry(country: String) {
+    fun deleteCitiesByCountry(country: String) : Boolean {
         val db = databaseHelper.writableDatabase
 
-        db.delete(
+        val res = db.delete(
             TABLE_NAME,
             "$COLUMN_COUNTRY = ?",
             arrayOf(country)
         )
-
         db.close()
+        return res > 0
     }
 
     fun updateCityPopulation(city: City) {

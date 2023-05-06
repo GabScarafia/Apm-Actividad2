@@ -1,6 +1,7 @@
 package com.example.apm_actividad2
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -24,6 +25,7 @@ class CiudadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cities)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         db = CiudadService(this)
 
@@ -40,68 +42,164 @@ class CiudadActivity : AppCompatActivity() {
 
 
         addCityButton.setOnClickListener {
-            val country = countryEditText.text.toString()
-            val city = cityEditText.text.toString()
-            val population = populationEditText.text.toString().toInt()
+            val country = countryEditText.text.toString().trim()
+            val city = cityEditText.text.toString().trim()
+            val population = populationEditText.text?.toString()?.toIntOrNull() ?: 0
 
-            val newCity = City(null, country, city, population)
-            db.addCity(newCity)
+            if(country.isNullOrBlank() or city.isNullOrBlank() or (population == 0)){
+                Toast.makeText(
+                    this,
+                    "Hay un campo En nulo",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }else {
+
+                val newCity = City(null, country, city, population)
+                val res = db.addCity(newCity)
+                if (res) {
+                    Toast.makeText(
+                        this,
+                        "Ciudad Agregada Correctamente",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Esta ciudad ya existe",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
         getCityButton.setOnClickListener {
-            val cityName = cityEditText.text.toString()
-
-            val city = db.getCityByName(cityName)
-
-            city?.let {
+            val cityName = cityEditText.text.toString().trim()
+            if(cityName.isNullOrBlank()){
                 Toast.makeText(
                     this,
-                    "${it.city}, ${it.country}: ${it.population} people",
+                    "El campo ciudad no puede estar nulo",
                     Toast.LENGTH_SHORT
                 ).show()
-            } ?: run {
-                Toast.makeText(
-                    this,
-                    "City not found",
-                    Toast.LENGTH_SHORT
-                ).show()
+            }
+            else
+            {
+                val city = db.getCityByName(cityName)
+                city?.let {
+                    Toast.makeText(
+                        this,
+                        "${it.city}, ${it.country}: ${it.population} Personas",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } ?: run {
+                    Toast.makeText(
+                        this,
+                        "Ciudad No Encontrada",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
 
         deleteCityButton.setOnClickListener {
-            val cityName = cityEditText.text.toString()
-
-            db.deleteCityByName(cityName)
-        }
-
-        deleteCitiesByCountryButton.setOnClickListener {
-            val country = countryEditText.text.toString()
-
-            db.deleteCitiesByCountry(country)
-        }
-
-        updatePopulationButton.setOnClickListener {
-            val cityName = cityEditText.text.toString()
-            val newPopulation = populationEditText.text.toString().toInt()
-
-            val city = db.getCityByName(cityName)
-
-            city?.let {
-                it.population = newPopulation
-                db.updateCityPopulation(it)
-
+            val cityName = cityEditText.text.toString().trim()
+            if(cityName.isNullOrBlank()){
                 Toast.makeText(
                     this,
-                    "Population updated",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } ?: run {
-                Toast.makeText(
-                    this,
-                    "City not found",
+                    "el campo ciudad no puede estar nulo",
                     Toast.LENGTH_SHORT
                 ).show()
             }
+            else
+            {
+                val res = db.deleteCityByName(cityName)
+                if(res){
+                    Toast.makeText(
+                        this,
+                        "Ciudad Borrada Correctamente",
+                        Toast.LENGTH_SHORT
+                    ).show()}
+                else
+                {
+                    Toast.makeText(
+                        this,
+                        "Error, esta ciudad no existe",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
+
+
+        deleteCitiesByCountryButton.setOnClickListener {
+            val country = countryEditText.text.toString().trim()
+            if(country.isNullOrBlank()){
+                Toast.makeText(
+                    this,
+                    "El campo pais no puede estar nulo",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }else
+            {
+                val res = db.deleteCitiesByCountry(country)
+                if(res){
+                    Toast.makeText(
+                        this,
+                        "Ciudades Borradas Correctamente",
+                        Toast.LENGTH_SHORT
+                    ).show()}
+                else
+                {
+                    Toast.makeText(
+                        this,
+                        "Error, no hay ciudades en este pais",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+
+        }
+
+        updatePopulationButton.setOnClickListener {
+            val cityName = cityEditText.text.toString().trim()
+            val newPopulation = populationEditText.text?.toString()?.toIntOrNull() ?: 0
+            if(cityName.isNullOrBlank() or (newPopulation == 0)){
+                Toast.makeText(
+                    this,
+                    "El campo ciudad y el campo poblacion no puede ser nulo",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            else{
+                val city = db.getCityByName(cityName)
+
+                city?.let {
+                    it.population = newPopulation
+                    db.updateCityPopulation(it)
+
+                    Toast.makeText(
+                        this,
+                        "Población actualizada",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } ?: run {
+                    Toast.makeText(
+                        this,
+                        "Ciudad No Encontrada",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+        }
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -6,29 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/guessEditText"
-        android:layout_width="246dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
-        android:hint="Enter your guess"
-        android:inputType="number"
-        app:layout_constraintEnd_toEndOf="@+id/highScoreTextView"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="@+id/highScoreTextView"
-        app:layout_constraintTop_toBottomOf="@+id/highScoreTextView" />
+    <TextView
+        android:id="@+id/attemptTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:text="Vidas:"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="20dp"
         android:text="Puntuación: 0"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/attemptTextView"
+        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintStart_toStartOf="@+id/attemptTextView"
+        app:layout_constraintTop_toBottomOf="@+id/attemptTextView" />
 
     <TextView
         android:id="@+id/highScoreTextView"
@@ -41,26 +43,29 @@
         app:layout_constraintStart_toStartOf="@+id/scoreTextView"
         app:layout_constraintTop_toBottomOf="@+id/scoreTextView" />
 
+    <EditText
+        android:id="@+id/guessEditText"
+        android:layout_width="246dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:hint="Enter your guess"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="@+id/highScoreTextView"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="@+id/highScoreTextView"
+        app:layout_constraintTop_toBottomOf="@+id/highScoreTextView" />
+
     <Button
         android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:backgroundTint="#F44336"
         android:text="Adivinar"
         app:layout_constraintEnd_toEndOf="@+id/guessEditText"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="@+id/guessEditText"
         app:layout_constraintTop_toBottomOf="@+id/guessEditText" />
-
-    <Button
-        android:id="@+id/backGame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Volver"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+    />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

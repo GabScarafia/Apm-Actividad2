@@ -7,22 +7,12 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/countryLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pais" />
-
-    <EditText
-        android:id="@+id/countryEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text" />
-
-    <TextView
         android:id="@+id/cityLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ciudad" />
+        android:text="Ciudad"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/cityEditText"
@@ -31,10 +21,26 @@
         android:inputType="text" />
 
     <TextView
+        android:id="@+id/countryLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pais"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/countryEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text" />
+
+    <TextView
         android:id="@+id/populationLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Población" />
+        android:text="Población"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/populationEditText"

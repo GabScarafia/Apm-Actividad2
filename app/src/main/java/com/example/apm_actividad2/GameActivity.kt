@@ -3,6 +3,8 @@ package com.example.apm_actividad2
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -13,6 +15,7 @@ class GameActivity : AppCompatActivity() {
     private lateinit var guessEditText: EditText
     private lateinit var scoreTextView: TextView
     private lateinit var highScoreTextView: TextView
+    private lateinit var attemptTextView: TextView
 
     private lateinit var volverButton: Button
 
@@ -22,28 +25,28 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         guessEditText = findViewById(R.id.guessEditText)
         scoreTextView = findViewById(R.id.scoreTextView)
         highScoreTextView = findViewById(R.id.highScoreTextView)
-
-        volverButton = findViewById(R.id.backGame)
-        volverButton.setOnClickListener {
-                finish()
-        }
         sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+        attemptTextView = findViewById(R.id.attemptTextView)
 
         val highScore = sharedPreferences.getInt("highScore", 0)
         highScoreTextView.text = "Puntuación máxima: $highScore"
+        val submitButton: Button = findViewById(R.id.submitButton)
+        attemptTextView.text = "Vidas:❤❤❤❤❤"
 
         game = Game()
 
-        val submitButton: Button = findViewById(R.id.submitButton)
         submitButton.setOnClickListener {
             val guess = guessEditText.text.toString().toIntOrNull()
             if (guess != null) {
+
                 if(guess <= 5) {
                     val result = game.guess(guess)
+                    val attempts = game.attempts
                     if (result == GuessResult.CORRECT) {
                         Toast.makeText(
                             this,
@@ -51,6 +54,7 @@ class GameActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                         game.incrementScore()
+                        attemptTextView.text = "Vidas:❤❤❤❤❤"
                         scoreTextView.text = "Puntuación: ${game.score}"
                     } else if (result == GuessResult.INCORRECT || result == GuessResult.INCORRECT_GAME_OVER) {
                         if (game.isGameOver()) {
@@ -65,8 +69,14 @@ class GameActivity : AppCompatActivity() {
                             }
                             game.reset()
                             scoreTextView.text = "Puntuación: ${game.score}"
+                            attemptTextView.text = "Vidas:❤❤❤❤❤"
                         } else {
                             Toast.makeText(this,"Incorrecto! El numero era ${game.randomNumber}",Toast.LENGTH_SHORT).show()
+                            attemptTextView.text = "Vidas:❤❤❤❤❤"
+                            for (i in 1..attempts){
+                                attemptTextView.text = attemptTextView.text.substring(0, attemptTextView.text.length - 1)
+                            }
+
                         }
                     }
                 }else{
@@ -76,10 +86,19 @@ class GameActivity : AppCompatActivity() {
             }
         }
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
 private class Game {
     var randomNumber = 0
-    private var attempts = 0
+    var attempts = 0
     var score = 0
         private set
 
